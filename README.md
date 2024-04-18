@@ -20,3 +20,9 @@ Installing gofiber
 ```
 go get github.com/gofiber/fiber/v3
 ```
+
+MongoDB Driver
+
+```
+go get go.mongodb.org/mongo-driver/mongo
+```

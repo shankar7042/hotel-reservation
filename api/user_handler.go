@@ -1,11 +1,34 @@
 package api
 
 import (
+	"context"
+
 	"github.com/gofiber/fiber/v3"
+	"github.com/shankar7042/hotel-reservation-golang/db"
 	"github.com/shankar7042/hotel-reservation-golang/types"
 )
 
-func HandleGetUsers(c fiber.Ctx) error {
+type UserHandler struct {
+	userStore db.UserStore
+}
+
+func NewUserHandler(userStore db.UserStore) *UserHandler {
+	return &UserHandler{
+		userStore: userStore,
+	}
+}
+
+func (h *UserHandler) HandleGetUser(c fiber.Ctx) error {
+	id := c.Params("id")
+	ctx := context.Background()
+	user, err := h.userStore.GetUserByID(ctx, id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(user)
+}
+
+func (h *UserHandler) HandleGetUsers(c fiber.Ctx) error {
 	users := []types.User{
 		{
 			FirstName: "Shankar",
@@ -21,11 +44,4 @@ func HandleGetUsers(c fiber.Ctx) error {
 		},
 	}
 	return c.JSON(users)
-}
-
-func HandleGetUser(c fiber.Ctx) error {
-	return c.JSON(types.User{
-		FirstName: "Shankar",
-		LastName:  "Kumar",
-	})
 }
