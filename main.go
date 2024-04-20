@@ -12,7 +12,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const dbUri = "mongodb://localhost:27017"
+const (
+	dbUri  = "mongodb://localhost:27017"
+	dbname = "hotel-reservation"
+)
 
 var config = fiber.Config{
 	ErrorHandler: func(c *fiber.Ctx, err error) error {
@@ -34,7 +37,7 @@ func main() {
 
 	app := fiber.New(config)
 	apiv1 := app.Group("/api/v1")
-	userHandler := api.NewUserHandler(db.NewMongoUserStore(client))
+	userHandler := api.NewUserHandler(db.NewMongoUserStore(client, dbname))
 	apiv1.Post("/user", userHandler.HandlePostUser)
 	apiv1.Get("/user", userHandler.HandleGetUsers)
 	apiv1.Get("/user/:id", userHandler.HandleGetUser)
